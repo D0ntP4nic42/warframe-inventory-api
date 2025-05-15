@@ -50,7 +50,7 @@ public class AuthController {
 	@ApiResponse(responseCode = "500", description = "Um erro desconhecido ocorreu", content = @Content())
 	@PostMapping("/login")
 	public ResponseEntity login(@RequestBody LoginDTO loginDTO) {
-		var user = userService.findUser(loginDTO.email());
+		var user = userService.findUser(loginDTO.emailOuUsername());
 
 		if (PASSWORD_ENCODER.matches(loginDTO.senha(), user.getSenha())) {
 			return ResponseEntity.ok(Collections.singletonMap("token", gerarAccessToken(user)));
