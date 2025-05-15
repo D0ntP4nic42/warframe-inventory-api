@@ -1,0 +1,31 @@
+name: warframe_invenotry
+services:
+  mysql:
+    image: mysql
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_DATABASE=warframe_api
+      - MYSQL_ROOT_PASSWORD=1234
+    networks:
+      - warframe_api_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "--password=1234"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  warframe_api:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on: 
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3307/warframe_api?allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+    networks:
+      - warframe_api_network
+networks:
+  warframe_api_network:
+    driver: bridge
