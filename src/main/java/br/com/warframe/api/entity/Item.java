@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Item {
@@ -18,9 +16,11 @@ public class Item {
     @Column(nullable = false, length = 100)
     private String itemNome;
 
-    @ManyToOne
-    @JoinColumn(name = "itemTipo_id", nullable = false)
-    private ItemTipo itemTipo;
+    @Column
+    private String itemDescricao;
+
+    @Column
+    private String wikiaThumbnail;
 
     // Getters e setters
     public Long getItemId() {
@@ -39,11 +39,19 @@ public class Item {
         this.itemNome = itemNome;
     }
 
-    public ItemTipo getItemTipo() {
-        return itemTipo;
+    public String getItemDescricao() {
+        return itemDescricao;
     }
 
-    public void setItemTipo(ItemTipo itemTipo) {
-        this.itemTipo = itemTipo;
+    public void setItemDescricao(String itemDescricao) {
+        this.itemDescricao = itemDescricao;
+    }
+
+    public String getWikiaThumbnail() {
+        return wikiaThumbnail;
+    }
+
+    public void setWikiaThumbnail(String wikiaThumbnail) {
+        this.wikiaThumbnail = wikiaThumbnail;
     }
 }

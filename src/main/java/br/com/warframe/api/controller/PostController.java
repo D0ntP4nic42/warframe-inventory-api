@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,13 @@ import br.com.warframe.api.service.PostService;
 import br.com.warframe.api.vo.CreatePostDTO;
 import br.com.warframe.api.vo.PostResponseDTO;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
 @Tag(name = "Post", description = "Rotas para manipulação de postagens dos usuários")
+@SecurityRequirement(name = "bearerAuth")
 public class PostController {
 
     @Autowired
@@ -27,8 +30,11 @@ public class PostController {
     @ApiResponse(responseCode = "200", description = "Post criado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostResponseDTO.class)))
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     @PostMapping
-    public ResponseEntity<PostResponseDTO> criarPost(@RequestBody CreatePostDTO dto) {
-        PostResponseDTO postCriado = postService.criarPost(dto);
+    public ResponseEntity<PostResponseDTO> criarPost(@RequestBody CreatePostDTO dto, Principal principal) {
+        PostResponseDTO postCriado = postService.criarPost(dto, principal.getName());
+        if (postCriado == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(postCriado);
     }
 

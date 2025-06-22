@@ -26,8 +26,10 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponseDTO criarPost(CreatePostDTO dto) {
-        User user = userRepository.findByUsernameOrEmail(dto.username(), dto.username())
+    public PostResponseDTO criarPost(CreatePostDTO dto, String usernameOrEmail) {
+        User user = userRepository.findByUsernameOrEmail(
+                usernameOrEmail,
+                usernameOrEmail)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         Post post = new Post();
