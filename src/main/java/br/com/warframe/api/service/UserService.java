@@ -1,6 +1,8 @@
 package br.com.warframe.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.warframe.api.entity.User;
@@ -13,6 +15,8 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 
+	public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+
 	public User findUser(String usernameOrEmail) {
 		var user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
 				.orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
@@ -24,9 +28,11 @@ public class UserService {
 			throw new RuntimeException("Usuário já existe");
 		});
 
-		var user = userRepository.save(new User(registerDTO.username(), registerDTO.email(), registerDTO.senha()));
-		if (user == null) {
-			throw new RuntimeException();
-		}
+		User user = new User();
+		user.setUsername(registerDTO.username());
+		user.setSenha(PASSWORD_ENCODER.encode(registerDTO.senha()));
+		user.setEmail(registerDTO.email());
+
+		userRepository.save(user);
 	}
 }

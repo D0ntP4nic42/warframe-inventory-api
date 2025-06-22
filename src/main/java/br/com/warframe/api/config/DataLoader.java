@@ -34,8 +34,9 @@ public class DataLoader implements ApplicationRunner {
 			System.out.println("\n\n ===== Usuário inicial já existe ===== \n\n");
 			return;
 		}
-		
-		userRepository.save(new User(EMAIL_INICIAL, USERNAME_INICIAL, PASSWORD_ENCODER.encode(SENHA_INICIAL)));
+		var userNew = new User(EMAIL_INICIAL, USERNAME_INICIAL, PASSWORD_ENCODER.encode(SENHA_INICIAL));
+
+		userRepository.save(userNew);
 		System.out.println("\n\n ===== Usuário inicial cadastrado com sucesso ===== \n\n");
 	}
 }
