@@ -1,5 +1,6 @@
 package br.com.warframe.api.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ import br.com.warframe.api.entity.UserItem;
 
 public interface UserItemRepository extends JpaRepository<UserItem, Long> {
     Optional<UserItem> findByUserAndItem(User user, Item item);
+
+    List<UserItem> findByUser(User user);
 }
